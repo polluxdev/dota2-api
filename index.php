@@ -13,6 +13,7 @@
         margin: 0;
         padding: 0;
     }
+
     .container {
         position: relative;
         background-image: url("https://dmarket.com/blog/best-dota2-wallpapers/dota2heroes7_hu3b1dceb244ec3fefbad73471cde2e900_222198_1920x1080_resize_q75_box.jpg");
@@ -211,27 +212,28 @@
 <body>
     <!-- div kontainer supaya tidak rusak ketika diresize -->
     <div class="container">
+        <!-- judul konten -->
         <p class="title">Dota 2 Heroes</p>
-
+        <!-- untuk memanggil json dari API -->
         <?php
             $sumber = 'https://api.opendota.com/api/heroStats';
             $konten = file_get_contents($sumber);
             $data = json_decode($konten, true);
         ?>
-
-         <div class="search">
+        <!-- div untuk input search hero dan tombol search -->
+        <div class="search">
             <form action="" method="get">
                 <input class="input" type="text" name="display" placeholder="Search for hero's name ...">
                 <button class="search_button" type="submit"><i class="fas fa-search fa-2x"></i></button>
             </form>
         </div>
-            
+        <!-- div untuk menampilkan semua hero -->
         <div class="button">
             <a href="http://<?php echo $_SERVER['SERVER_NAME'].'/'.basename(__DIR__)?>">SHOW ALL HEROES</a>
         </div>
-
+        <!-- untuk validasi variabel hero yang namanya akan diinputkan-->
         <?php if(isset($_GET['display'])){ ?>
-
+        <!-- div untuk menampilkan tabel hero yang namanya sudah diinputkan -->
         <div class="tabel">
             <table class=table>
                 <tr>
@@ -241,7 +243,7 @@
                     <th>Type</th>
                     <th>Roles</th>
                 </tr>
-
+            <!-- untuk memanggil atribut yang ada di json dari hero yang namanya sudah diinputkan dan menampilkannya -->
             <?php
                 for($i=0;$i<count($data);$i++){
                     if(strtolower($data[$i]["localized_name"]) ==  $_GET['display']){
@@ -266,9 +268,9 @@
             ?>
             </table>
         </div>
-
+        <!-- untuk validasi variabel ability dari semua hero -->
         <?php }else if(isset($_GET['ability'])){ ?>
-
+        <!-- untuk menampilkan tabel ability dari masing-masing hero -->
         <div class="ability_table">
             <table class="ability">
                 <tr>
@@ -295,7 +297,7 @@
                     <th><span class="tooltip" title="Turn Rate" style="cursor: help; border-bottom: 1px dotted;">TR</span></th>
                     <th><span class="tooltip" title="Legs" style="cursor: help; border-bottom: 1px dotted;">L</span></th>
                 </tr>
-
+        <!-- untuk memanggil atribut masing-masing hero dari json dan menampilkannya -->
         <?php
             for($m=0;$m<count($data);$m++){
                 if(strtolower($data[$m]["localized_name"]) ==  $_GET['ability']){
@@ -341,47 +343,50 @@
 
             </table>
         </div>
+        <!-- untuk validasi variabel yang menampilkan semua hero -->
         <?php }else{ ?>
-
-            <div class="tabel">
-        <table class="table">
-            <tr>
-                <th>Number</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Primary Attribute</th>
-                <th>Type</th>
-                <th>Roles</th>
-            </tr>
-    <?php
-        for($a=0; $a < count($data); $a++){
-            echo "<tr>";
-            echo "<td>".$data[$a]['id']."</td>";
-            echo "<td><img src='http://cdn.dota2.com".$data[$a]['img']."'></td>";
-            echo "<td><a href='?display=".strtolower($data[$a]['localized_name'])."'>".$data[$a]['localized_name']."</a></td>";
-            if ($data[$a]['primary_attr'] == "str"){
-                echo "<td><a href='?ability=".strtolower($data[$a]['localized_name'])."'>Strength</a></td>";
-            } else if ($data[$a]['primary_attr'] == "agi"){
-                echo "<td><a href='?ability=".strtolower($data[$a]['localized_name'])."'>Agility</a></td>";
-            } else {
-                echo "<td><a href='?ability=".strtolower($data[$a]['localized_name'])."'>Intelligence</a></td>";
+        <!-- untuk menampilkan tabel semua hero -->
+        <div class="tabel">
+            <table class="table">
+                <tr>
+                    <th>Number</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Primary Attribute</th>
+                    <th>Type</th>
+                    <th>Roles</th>
+                </tr>
+        <!-- untuk memanggil semua hero dari json -->
+        <?php
+            for($a=0; $a < count($data); $a++){
+                echo "<tr>";
+                echo "<td>".$data[$a]['id']."</td>";
+                echo "<td><img src='http://cdn.dota2.com".$data[$a]['img']."'></td>";
+                echo "<td><a href='?display=".strtolower($data[$a]['localized_name'])."'>".$data[$a]['localized_name']."</a></td>";
+                if ($data[$a]['primary_attr'] == "str"){
+                    echo "<td><a href='?ability=".strtolower($data[$a]['localized_name'])."'>Strength</a></td>";
+                } else if ($data[$a]['primary_attr'] == "agi"){
+                    echo "<td><a href='?ability=".strtolower($data[$a]['localized_name'])."'>Agility</a></td>";
+                } else {
+                    echo "<td><a href='?ability=".strtolower($data[$a]['localized_name'])."'>Intelligence</a></td>";
+                }
+                echo "<td>".$data[$a]['attack_type']."</td>";
+                echo "<td>";
+                for($i=0;$i <count($data[$a]['roles']);$i++){
+                    echo "<li>".$data[$a]['roles'][$i] ."</li>";    
+                }
+                echo "</td>";  
+                echo "</tr>";
             }
-            echo "<td>".$data[$a]['attack_type']."</td>";
-            echo "<td>";
-            for($i=0;$i <count($data[$a]['roles']);$i++){
-                echo "<li>".$data[$a]['roles'][$i] ."</li>";    
-            }
-            echo "</td>";  
-            echo "</tr>";
-        }
-    ?>
+        ?>
 
-        </table>
-    </div>
+            </table>
+        </div>
 
-    <?php
-        } 
-    ?>
+        <?php
+            } 
+        ?>
+    <!-- untuk footer -->
     <div style="margin-top:80px;"></div>
         <footer>
             <div>
@@ -389,8 +394,5 @@
             </div>
         </footer>
     </div>
-    <script>
-
-    </script>
 </body>
 </html>
